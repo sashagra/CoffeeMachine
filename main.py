@@ -41,7 +41,6 @@ def input_and_check_coins(drink):
         q = int(input('quarters: '))
         total_pay += round((q * 0.25 + d * 0.1 + n * 0.05 + p * 0.01), 2)
         if total_pay >= drink["cost"]:
-            print("Take your drink")
             return total_pay
         else:
             print(f"You insert ${total_pay} but it's not enough. You should add something to ${drink['cost']}")
@@ -56,6 +55,7 @@ def give_the_drink(drink, res):
     for item in drink["ingredients"]:
         res[item] -= drink["ingredients"][item]
     res["money"] += drink["cost"]
+    print("Take your drink")
     return res
 
 
@@ -74,7 +74,7 @@ while is_on:
                 is_on = False
                 break
             elif choice == "report":
-                print(f"Water: {resources}")
+                print(f"Resources: {resources}")
                 break
             try:
                 if not available_drinks[choice]:
@@ -82,6 +82,9 @@ while is_on:
                 else:
                     payment = input_and_check_coins(MENU[choice])
                     if payment:
+                        if payment > MENU[choice]['cost']:
+                            change = round((payment - MENU[choice]['cost']), 2)
+                            print(f"Your change is ${change}")
                         resources = give_the_drink(MENU[choice], resources)
                     break
             except KeyError:
