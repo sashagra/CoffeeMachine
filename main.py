@@ -1,4 +1,5 @@
 from menu import MENU
+import time
 resources = {
     "water": 300,
     "milk": 200,
@@ -43,11 +44,11 @@ def input_and_check_coins(drink):
         if total_pay >= drink["cost"]:
             return total_pay
         else:
-            print(f"You insert ${total_pay} but it's not enough. You should add something to ${drink['cost']}")
             if attempts > 0:
+                print(f"You insert ${total_pay} but it's not enough. You should add something to ${drink['cost']}")
                 attempts -= 1
             else:
-                print("Something went wrong. Maybe you have not money? Then back later")
+                print(f"Something went wrong. Maybe you have not enough money? Give your ${total_pay} and back later")
                 return False
 
 
@@ -55,7 +56,9 @@ def give_the_drink(drink, res):
     for item in drink["ingredients"]:
         res[item] -= drink["ingredients"][item]
     res["money"] += drink["cost"]
-    print("Take your drink")
+    time.sleep(1)
+    print("Take your drink!\n----------processing-----------")
+    time.sleep(1)
     return res
 
 
