@@ -1,2 +1,2 @@
-# CoffeeMachine
+# Coffee Machine
 Coffee Machine python project
