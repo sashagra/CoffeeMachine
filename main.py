@@ -29,24 +29,32 @@ def fl_text(available_list):
 
 
 def input_and_check_coins(drink):
-    total_pay = 0
+    """Ask for payment with coins and check if money enough"""
     attempts = 3
+    total_pay = 0
     while True:
+        print(f"It costs ${drink['cost']}. Insert the coins")
         p = int(input('pennies: '))
         n = int(input('nickles: '))
         d = int(input('dimes: '))
         q = int(input('quarters: '))
-        total_pay = q * 0.25 + d * 0.1 + n * 0.05 + p * 0.01
+        total_pay += round((q * 0.25 + d * 0.1 + n * 0.05 + p * 0.01), 2)
         if total_pay >= drink["cost"]:
             print("Take your drink")
-            return
+            return total_pay
         else:
-            print("It's not enough money. You should add something")
+            print(f"You insert ${total_pay} but it's not enough. You should add something to ${drink['cost']}")
             if attempts > 0:
                 attempts -= 1
             else:
                 print("Something went wrong. Maybe you have not money? Then back later")
                 return False
+
+
+def give_the_drink(drink, res):
+    for item in drink["ingredients"]:
+        res[item] -= drink["ingredients"][item]
+    return res
 
 
 available_drinks = discover_resources(MENU)
@@ -61,9 +69,10 @@ else:
             if not available_drinks[answer]:
                 print("Not enough ingredients")
             else:
-                input_and_check_coins(MENU[answer])
+                payment = input_and_check_coins(MENU[answer])
+                if payment:
+                    resources = give_the_drink(MENU[answer], resources)
+                    print('ok\n', resources)
                 break
         except KeyError:
             print("It's not right answer!")
-
-    print("Good choice")
