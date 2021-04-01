@@ -3,6 +3,7 @@ resources = {
     "water": 300,
     "milk": 200,
     "coffee": 100,
+    "money": 0
 }
 
 
@@ -54,25 +55,36 @@ def input_and_check_coins(drink):
 def give_the_drink(drink, res):
     for item in drink["ingredients"]:
         res[item] -= drink["ingredients"][item]
+    res["money"] += drink["cost"]
     return res
 
 
-available_drinks = discover_resources(MENU)
+is_on = True
 
-if not available_drinks:
-    print("Sorry. The machine not have needful ingredients. Back again later")
-else:
-    while True:
-        answer = input(f"What would you like? ({fl_text(available_drinks)}): ").lower()
+while is_on:
+    available_drinks = discover_resources(MENU)
 
-        try:
-            if not available_drinks[answer]:
-                print("Not enough ingredients")
-            else:
-                payment = input_and_check_coins(MENU[answer])
-                if payment:
-                    resources = give_the_drink(MENU[answer], resources)
-                    print('ok\n', resources)
+    if not available_drinks:
+        print("Sorry. The machine not have needful ingredients. Back again later")
+        break
+    else:
+        while True:
+            choice = input(f"What would you like? ({fl_text(available_drinks)}): ").lower()
+            if choice == "off":
+                is_on = False
                 break
-        except KeyError:
-            print("It's not right answer!")
+            elif choice == "report":
+                print(f"Water: {resources}")
+                break
+            try:
+                if not available_drinks[choice]:
+                    print("Not enough ingredients")
+                else:
+                    payment = input_and_check_coins(MENU[choice])
+                    if payment:
+                        resources = give_the_drink(MENU[choice], resources)
+                    break
+            except KeyError:
+                print("It's not right answer!")
+
+print("Bye, bye!")
